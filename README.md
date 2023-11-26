@@ -25,7 +25,8 @@ pip install flask flask_oidc
 3. Run the application:
 
 ```bash
-python flask-app/app.py
+cd flask-app
+python app.py
 ```
 
 The Python Flask app is now running at [http://localhost:5000](http://localhost:5000).

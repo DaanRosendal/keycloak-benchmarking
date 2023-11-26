@@ -44,6 +44,8 @@ Keycloak is now running at [http://localhost:8080](http://localhost:8080).
 
 3. When creating the client, ensure that `Valid Redirect URIs` is set to `http://localhost:5000/*`.
 
+![image](https://github.com/DaanRosendal/keycloak-benchmarking/assets/32291500/f8613e2e-f4e5-45b9-a53a-1246930c05dd)
+
 ## Fill the Database
 
 1. Adjust the configurations at the top of the file, e.g., for creating groups:

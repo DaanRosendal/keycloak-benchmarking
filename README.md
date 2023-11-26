@@ -52,9 +52,9 @@ Keycloak is now running at [http://localhost:8080](http://localhost:8080).
 
 ```go
 const (
-	baseUrl     = "http://localhost:8080"
-	realm       = "your_realm"
-	accessToken = "your_accessToken"
+    baseUrl     = "http://localhost:8080"
+    realm       = "your_realm"
+    accessToken = "your_accessToken"
 )
 ```
 

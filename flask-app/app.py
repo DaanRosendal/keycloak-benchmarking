@@ -53,7 +53,7 @@ def private():
             Your email is {email} and your user_id is {user_id}.\n\n
             <ul>
                 <li><a href="/">Home</a></li>
-                <li><a href="localhost:8080/realms/test/account?referrer=flask-app&referrer_uri=http://localhost:5000/private&">Account</a></li>
+                <li><a href="localhost:8080/realms/benchmarking/account?referrer=flask-app&referrer_uri=http://localhost:5000/private&">Account</a></li>
                 <li><a href="/logout">Log out</a></li>
             </ul>"""
 

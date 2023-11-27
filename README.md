@@ -3,6 +3,7 @@
 This guide facilitates the benchmarking of Keycloak through a Python Flask application integrated with Keycloak through OpenID Connect (OIDC). The setup is inspired by Thomas Darimont's example, accessible [here](https://gist.github.com/thomasdarimont/145dc9aa857b831ff2eff221b79d179a).
 
 ## Overview
+
 - [Components](#components)
 - [Set Up Keycloak](#set-up-keycloak)
 - [Set Up Python Flask App](#set-up-python-flask-app)
@@ -47,6 +48,7 @@ docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin
   ![create-client-login-settings-image](images/create-client-login-settings.png)
 
 #### Copy Client Secret to Flask App
+
 Copy the client secret from the client details page and paste it into the `client_secrets.json` file in the `flask-app` directory.
 ![copy-oidc-client-secret-image](images/copy-oidc-client-secret.png)
 

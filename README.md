@@ -7,7 +7,7 @@ This guide facilitates the benchmarking of Keycloak through a Python Flask appli
 - [Components](#components)
 - [Set Up Keycloak](#set-up-keycloak)
 - [Set Up Python Flask App](#set-up-python-flask-app)
-- [Fill the Database](#fill-the-database)
+- [Measure the Performance of Keycloak](#measure-the-performance-of-keycloak)
 
 ## Components
 
@@ -29,6 +29,8 @@ docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin
 ### 2. Create a Realm
 
 ![create-realm-image](images/create-realm.png)
+
+Call the realm `benchmarking`, or any other name you prefer.
 
 ### 3. Create a Client
 
@@ -54,7 +56,7 @@ Copy the client secret from the client details page and paste it into the `clien
 
 ### 4. Adjust Token Lifetimes
 
-By default the access token lifespan is set to 5 minutes and the SSO session idle timeout is set to 30 minutes. Make sure you change these settings in the `master` realm. To increase the token lifetimes, follow these steps:
+By default the access token lifespan is set to 1 minute and the SSO session idle timeout is set to 30 minutes. Make sure you change these settings in the `master` realm. To increase the token lifetimes, follow these steps:
 
 - Set the SSO session idle timeout to 1 day:
   ![realm-settings-sessions-image](images/realm-settings-sessions.png)
@@ -66,7 +68,7 @@ By default the access token lifespan is set to 5 minutes and the SSO session idl
 
 - Username: `user`
 - Email: `user@example.org`
-- Email Verified: `On`
+- Email Verified: `Yes`
 - First Name: `user`
 - Last Name: `user`
 
@@ -101,7 +103,7 @@ python app.py
 
 The Python Flask app is now running at [http://localhost:5000](http://localhost:5000).
 
-## Fill the Database
+## Measure the Performance of Keycloak
 
 ### 1. Retrieve Admin User Access Token
 
@@ -116,28 +118,103 @@ curl -X POST \
   --data-urlencode 'client_id=admin-cli'
 ```
 
-### 2. Adjust Go Script Configurations
-
-```go
-const (
-    baseUrl     = "http://localhost:8080"
-    realm       = "your_realm"
-    accessToken = "your_accessToken"
-)
-```
-
-### 3. Install Go Modules
+### 2. Install Go Modules
 
 ```bash
 cd keycloak-fill-db-scripts
 go get 
 ```
 
-### 4. Execute Go Scripts
+### 3. Execute Go Scripts
+
+#### Creating groups
+
+Adjust the configurations in `cmd/create_groups/main.go`:
+
+```go
+const (
+    baseUrl     = "http://localhost:8080"
+    realm       = "your_realm"
+    accessToken = "your_access_token"
+)
+```
+
+Then run the script:
 
 ```bash
-cd keycloak-fill-db-scripts 
 go run ./cmd/create_groups <numberOfGroups>
 ```
 
-Feel free to customize the configurations and adapt the scripts as needed for your testing environment.
+#### Adding users to groups
+
+To add a user to each created group, adjust the configurations in `cmd/add_user_to_group/main.go`:
+
+```go
+const (
+    baseUrl     = "http://localhost:8080"
+    realm       = "your_realm"
+    accessToken = "your_access_token"
+    userID      = "user_id"
+)
+```
+
+You can grab the user ID from the Keycloak admin interface:
+
+![user-get-id-image](images/user-get-id.png)
+
+Then run the script:
+
+```bash
+go run ./cmd/add_user_to_group
+```
+
+#### Measuring the performance of fetching groups
+
+To measure the performance of fetching groups, adjust the configurations in `cmd/measure_fetch_groups_time/main.go`:
+
+```go
+const (
+    baseUrl     = "http://localhost:8080"
+    realm       = "your_realm"
+    accessToken = "your_access_token"
+)
+```
+
+Then run the script:
+
+- Note: This script iteratively creates and fetches groups for 2^0, 2^1, ..., 2^maxExponent. Be careful with the value of `maxExponent` as it can take a long time to run. E.g. if `maxExponent` is set to 20, the script will create and fetch groups for 2^0, 2^1, ..., 2^20, which results in 1048576 groups.
+
+```bash
+go run ./cmd/measure_fetch_groups_time <maxExponent>
+```
+
+##### Example Output with `maxExponent` set to 3
+
+```bash
+$ go run ./cmd/measure_fetch_groups_time 3
+Creating 2 groups...
+Created 2 groups.
+Fetching 2 groups...
+Iteration 1 - Number of Groups: 2, Fetch Time: 37.133817ms
+
+Creating 4 groups...
+Created 4 groups.
+Fetching 4 groups...
+Iteration 2 - Number of Groups: 4, Fetch Time: 6.098273ms
+
+Creating 8 groups...
+Created 8 groups.
+Fetching 8 groups...
+Iteration 3 - Number of Groups: 8, Fetch Time: 8.342701ms
+
++-----------+------------------+-------------+
+| ITERATION | NUMBER OF GROUPS | FETCH TIME  |
++-----------+------------------+-------------+
+|         1 |                2 | 37.133817ms |
+|         2 |                4 | 6.098273ms  |
+|         3 |                8 | 8.342701ms  |
++-----------+------------------+-------------+
+
+```
+
+Feel free to customise the configurations and adapt the scripts as needed for your testing environment.

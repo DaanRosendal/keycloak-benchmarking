@@ -8,6 +8,7 @@ This guide facilitates the benchmarking of Keycloak through a Python Flask appli
 - [Set Up Keycloak](#set-up-keycloak)
 - [Set Up Python Flask App](#set-up-python-flask-app)
 - [Measure the Performance of Keycloak](#measure-the-performance-of-keycloak)
+- [Results](#results)
 
 ## Components
 
@@ -218,3 +219,19 @@ Iteration 3 - Number of Groups: 8, Fetch Time: 8.342701ms
 ```
 
 Feel free to customise the configurations and adapt the scripts as needed for your testing environment.
+
+## Results
+
+A full research paper on the results of this benchmarking can be found [here](https://docs.google.com/document/d/1qLqGcEsFkt1jJtgtSx0J0UAFOgM4F36P2qjfi0IVykw/edit?usp=sharing). For the raw results of the benchmarking, see the [results](results) directory.
+
+### Fetch time comparison
+
+The chart below displays the average fetch time in seconds per number of groups. Notably, Keycloak 22.0.5 outperforms 23.0.0, even though Keycloak claims the following in the 23.0.0 release notes: “Performance around searching of groups is improved for the use-cases with many groups and subgroups. There are improvements, which allow paginated lookup of subgroups.” (Source: [Keycloak 23.0.0 Release Notes](https://www.keycloak.org/docs/latest/release_notes/index.html#group-scalability))
+
+![line-chart-fetch-time-comparison-image](results/line-chart-fetch-time-comparison.png)
+
+### Percentage differences
+
+The chart below illustrates the percentage differences in speed between Keycloak versions 23.0.0 and 22.0.5. Note the inconsistent pattern, as the performance decline exceeds 100% for group sizes ranging from 512 to 8192, followed by a relative improvement with 16384 groups being around 60% slower.
+
+![bar-chart-percentage-differences-image](results/bar-chart-percentage-differences.png)

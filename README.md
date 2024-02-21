@@ -24,6 +24,8 @@ The chart below displays the average fetch time in seconds per number of groups.
 
 The chart below illustrates the percentage differences in speed between Keycloak versions 23.0.0 and 22.0.5. Note the inconsistent pattern, as the performance decline exceeds 100% for group sizes ranging from 512 to 8192, followed by a relative improvement with 16384 groups being around 60% slower.
 
+![bar-chart-percentage-differences-image](results/bar-chart-percentage-differences.png)
+
 ## Components
 
 - **flask-app**: Python Flask application
@@ -233,5 +235,3 @@ Iteration 3 - Number of Groups: 8, Fetch Time: 8.342701ms
 ```
 
 Feel free to customise the configurations and adapt the scripts as needed for your testing environment.
-
-![bar-chart-percentage-differences-image](results/bar-chart-percentage-differences.png)
